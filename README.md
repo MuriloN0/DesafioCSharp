@@ -69,7 +69,7 @@ A API estará disponível na URL indicada (ex: `http://localhost:5048/`).
 | `GET` | `/api/clientes` | **Lista** todos os clientes cadastrados. |
 | `GET` | `/api/clientes/{id}` | **Consulta** um cliente específico pelo seu ID. |
 | `DELETE` | `/api/clientes/{id}` | **Exclui** um cliente pelo seu ID. |
-| `PUT` | `/api/clientes/{id}` | **Altera** os dados de um cliente. (Ainda a implementar) |
+| `PUT` | `/api/clientes/{id}` | **Altera** os dados de um cliente. |
 
 ---
 
