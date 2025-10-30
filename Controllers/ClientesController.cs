@@ -100,7 +100,7 @@ namespace DesafioCSharp.Controllers
 
             return Ok(clientesResponse);
         }
-        
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCliente(int id)
         {
@@ -120,6 +120,62 @@ namespace DesafioCSharp.Controllers
             await _appDbContext.SaveChangesAsync();
 
             return NoContent();
+        }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCliente(int id, [FromBody] ClienteCreateDto updateDto)
+        {
+            // Encontrar o cliente existente no banco
+            var cliente = await _appDbContext.Clientes
+                .Include(c => c.Endereco)
+                .Include(c => c.Contatos)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (cliente == null)
+            {
+                return NotFound("Cliente não encontrado.");
+            }
+
+            // Verificar se o CEP foi alterado.
+            if (cliente.Endereco.Cep != updateDto.Endereco.Cep)
+            {
+                // Se o CEP mudou, precisamos consultar o ViaCEP novamente
+                var cepInfo = await _viaCepService.ConsultarCepAsync(updateDto.Endereco.Cep);
+                if (cepInfo == null)
+                {
+                    return BadRequest("CEP de alteração não encontrado ou inválido.");
+                }
+                
+                // Atualiza Logradouro e Cidade com os dados do ViaCEP
+                cliente.Endereco.Logradouro = cepInfo.Logradouro;
+                cliente.Endereco.Cidade = cepInfo.Localidade;
+            }
+
+            cliente.Endereco.Cep = updateDto.Endereco.Cep;
+            cliente.Endereco.Numero = updateDto.Endereco.Numero;
+            cliente.Endereco.Complemento = updateDto.Endereco.Complemento;
+
+            // 4. Atualizar as propriedades simples do Cliente
+            cliente.Nome = updateDto.Nome;
+
+            // Remover todos os contatos antigos
+            _appDbContext.Contatos.RemoveRange(cliente.Contatos);
+
+            var novosContatos = updateDto.Contatos.Select(cDto => new Contato
+            {
+                Tipo = cDto.Tipo,
+                Texto = cDto.Texto,
+                ClienteId = cliente.Id
+            }).ToList();
+
+            cliente.Contatos = novosContatos; // Substitui a lista antiga pela nova
+
+            // Salvar todas as alterações no banco
+            await _appDbContext.SaveChangesAsync();
+
+            // Retornar o cliente atualizado
+            var clienteResponse = _mapper.Map<ClienteResponseDto>(cliente);
+            return Ok(clienteResponse);
         }
     }
 }

@@ -42,3 +42,4 @@ C:\Users\muril\OneDrive\Documentos\1.1 - Processos\ProjectMuralis\DesafioCSharp\
 C:\Users\muril\OneDrive\Documentos\1.1 - Processos\ProjectMuralis\DesafioCSharp\bin\Debug\net8.0\System.CodeDom.dll
 C:\Users\muril\OneDrive\Documentos\1.1 - Processos\ProjectMuralis\DesafioCSharp\bin\Debug\net8.0\AutoMapper.dll
 C:\Users\muril\OneDrive\Documentos\1.1 - Processos\ProjectMuralis\DesafioCSharp\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\muril\OneDrive\Documentos\1.1 - Processos\ProjectMuralis\DesafioCSharp\obj\Debug\net8.0\DesafioCSharp.sourcelink.json
